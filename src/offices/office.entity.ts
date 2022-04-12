@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Reservation } from 'src/reservations/reservation.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany  } from 'typeorm';
+
 @Entity()
 export class Office {
     @PrimaryGeneratedColumn()
@@ -8,5 +10,8 @@ export class Office {
     name: string;
 
     @Column()
-    places: number
+    places: number;
+
+    @OneToMany(type => Reservation, reservation => reservation.office)
+    reservations: Reservation[]
 }

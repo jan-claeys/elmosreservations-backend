@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import 'dotenv/config';
 import { UsersModule } from './users/users.module';
 import { OfficesModule } from './offices/offices.module';
+import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
   imports: [
@@ -24,8 +25,9 @@ import { OfficesModule } from './offices/offices.module';
         }
       }
     }),
-    //UsersModule,
+    UsersModule,
     OfficesModule,
+    ReservationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
