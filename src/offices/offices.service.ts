@@ -7,10 +7,14 @@ import { Office } from './Office.entity';
 export class OfficesService {
   constructor(
     @InjectRepository(Office)
-    private usersRepository: Repository<Office>,
+    private officeRepository: Repository<Office>,
   ) {}
 
   findAll(): Promise<Office[]> {
-    return this.usersRepository.find();
+    return this.officeRepository.query("select * from getoffices");
+  }
+
+  findOne(id: number): Promise<Office> {
+    return this.officeRepository.query("select * from getoffices where id = $1", [id]);
   }
 }

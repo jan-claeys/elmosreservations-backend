@@ -13,6 +13,12 @@ export class Reservation {
     @Column()
     end_date: Date;
 
+    @Column()
+    userId: number;
+
+    @Column()
+    officeId: number;
+
     @ManyToOne(type => Office, office => office.reservations, {eager: true})
     office: Office;
 

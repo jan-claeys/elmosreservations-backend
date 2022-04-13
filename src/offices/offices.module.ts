@@ -8,5 +8,6 @@ import { Office } from './office.entity';
   imports: [TypeOrmModule.forFeature([Office])],
   providers: [OfficesService],
   controllers: [OfficesController],
+  exports: [OfficesService]
 })
 export class OfficesModule {}
