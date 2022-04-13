@@ -15,7 +15,6 @@ export class ReservationsService {
   ) { }
 
   create(createReservationDto: CreateReservationDto) {
-    console.log(createReservationDto);
 
     this.reservationRepository.createQueryBuilder()
       .insert()
