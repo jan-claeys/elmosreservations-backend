@@ -43,4 +43,8 @@ export class ReservationsService {
        return new Date(reservation.end_date) > new Date() 
       });
   }
+
+  delete(id: number) {
+    this.reservationRepository.delete(id);
+  }
 }
