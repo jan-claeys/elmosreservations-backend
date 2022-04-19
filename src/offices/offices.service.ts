@@ -11,10 +11,10 @@ export class OfficesService {
   ) {}
 
   findAll(): Promise<Office[]> {
-    return this.officeRepository.query("select * from getoffices");
+    return this.officeRepository.query("select * from getoffices($1, $2)", [new Date(), new Date()]);
   }
 
   findOne(id: number): Promise<Office> {
-    return this.officeRepository.query("select * from getoffices where id = $1", [id]);
+    return this.officeRepository.query("select * from getoffices($1, $2) where id = $3", [new Date(), new Date(),id]);
   }
 }

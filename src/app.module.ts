@@ -6,13 +6,14 @@ import 'dotenv/config';
 import { UsersModule } from './users/users.module';
 import { OfficesModule } from './offices/offices.module';
 import { ReservationsModule } from './reservations/reservations.module';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
-      port: 5432,
+      port: Number(process.env.DB_PORT),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
@@ -28,6 +29,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     UsersModule,
     OfficesModule,
     ReservationsModule,
+    CompaniesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

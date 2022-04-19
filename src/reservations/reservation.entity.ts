@@ -1,5 +1,5 @@
 import { Office } from '../offices/office.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ViewEntity, ViewColumn} from 'typeorm';
 import { User } from 'src/users/user.entity';
 
 @Entity()
@@ -12,12 +12,6 @@ export class Reservation {
     
     @Column()
     end_date: Date;
-
-    @Column()
-    userId: number;
-
-    @Column()
-    officeId: number;
 
     @ManyToOne(type => Office, office => office.reservations, {eager: true})
     office: Office;

@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Office } from '../offices/office.entity';
-import { DataTypeNotSupportedError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './reservation.entity';
 import { OfficesService } from 'src/offices/offices.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ReservationsService {
   constructor(
     @InjectRepository(Reservation)
-    private readonly reservationRepository: Repository<Reservation>, private readonly officeService: OfficesService
+    private readonly reservationRepository: Repository<Reservation>,
+    private readonly officeService: OfficesService,
+    private readonly userService: UsersService,
   ) { }
 
-  create(createReservationDto: CreateReservationDto) {
+  async create(createReservationDto: CreateReservationDto) {
 
-    this.reservationRepository.createQueryBuilder()
-      .insert()
-      .into(Reservation)
-      .values([createReservationDto])
-      .execute();
+    let reservation: Reservation= this.reservationRepository.create(createReservationDto);
+
+    reservation.office = await this.officeService.findOne(createReservationDto.officeId);
+    reservation.user = await this.userService.findOne(createReservationDto.userId);
+
+    console.log(reservation);
+    
+    this.reservationRepository.save(reservation);
   }
 
   async find(officeId: number) {
