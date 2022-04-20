@@ -9,11 +9,11 @@ export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
   @Get()
-  findAll(@Query('officeId') officeId: number): Promise<any> {
+  findAll(@Query('officeId') officeId: number, @Query('startTime') startTime: Date, @Query('endTime') endTime: Date): Promise<any> {
     if(officeId) {
-      return this.reservationsService.find(officeId);
+      return this.reservationsService.find(officeId, startTime, endTime);
     }
-    return this.reservationsService.findAll();
+    return this.reservationsService.findAll(startTime, endTime);
   }
 
   

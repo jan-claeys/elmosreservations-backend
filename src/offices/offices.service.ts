@@ -14,7 +14,7 @@ export class OfficesService {
     return this.officeRepository.query("select * from getoffices($1, $2)", [new Date(), new Date()]);
   }
 
-  findOne(id: number): Promise<Office> {
-    return this.officeRepository.query("select * from getoffices($1, $2) where id = $3", [new Date(), new Date(),id]);
+  findOne(id: number, startTime: Date, endTime: Date): Promise<Office> {
+    return this.officeRepository.query("select * from getoffices($1, $2) where id = $3", [startTime, endTime, id]);
   }
 }

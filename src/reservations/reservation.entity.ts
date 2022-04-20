@@ -8,10 +8,10 @@ export class Reservation {
     id: number;
     
     @Column()
-    start_date: Date;
+    start_time: Date;
     
     @Column()
-    end_date: Date;
+    end_time: Date;
 
     @ManyToOne(type => Office, office => office.reservations, {eager: true})
     office: Office;

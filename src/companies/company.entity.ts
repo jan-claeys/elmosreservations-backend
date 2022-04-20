@@ -10,11 +10,11 @@ export class Company {
     name: string;
 
     @Column()
-    city: number;
+    city: string;
 
     @Column()
     street: string;
 
-    @OneToMany(type => Office, office => office.company)
+    @OneToMany(type => Office, office => office.company, {eager: true})
     offices: Office[]
 }
