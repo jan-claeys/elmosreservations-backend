@@ -17,4 +17,9 @@ export class UsersService {
   findOne(id: number): Promise<User> {
     return this.usersRepository.findOne(id);
   }
+
+  async findOneName(name: string): Promise<User | undefined> {
+    let users = await this.findAll();
+    return users.filter(user => user.name === name)[0];
+  }
 }

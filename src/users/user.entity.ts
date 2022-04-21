@@ -8,6 +8,9 @@ export class User {
   @Column()
   name: string;
 
+  @Column()
+  password: string;
+
   @OneToMany(type => Reservation, reservation => reservation.office)
   reservations: Reservation[];
 }
