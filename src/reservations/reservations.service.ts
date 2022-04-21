@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Reservation } from './reservation.entity';
 import { OfficesService } from 'src/offices/offices.service';
-import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ReservationsService {
@@ -13,17 +12,10 @@ export class ReservationsService {
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
     private readonly officeService: OfficesService,
-    private readonly userService: UsersService,
   ) { }
 
-  async create(createReservationDto: CreateReservationDto) {
-
-   /*  let reservation: Reservation= this.reservationRepository.create(createReservationDto);
-
-    reservation.office = await this.officeService.findOne(createReservationDto.officeId);
-    reservation.user = await this.userService.findOne(createReservationDto.userId);
-    
-    this.reservationRepository.save(reservation); */
+  create(createReservationDto: CreateReservationDto): Promise<Reservation> {
+    return this.reservationRepository.query('insert into reservation (start_time, end_time, "officeId", "userId") values ($1, $2, $3, $4)', [createReservationDto.startTime, createReservationDto.endTime, createReservationDto.officeId, createReservationDto.userId]);
   }
 
   async find(officeId: number, startTime: Date, endTime: Date) {
@@ -31,7 +23,7 @@ export class ReservationsService {
 
     let office: Office = await this.officeService.findOne(officeId, startTime, endTime);
 
-    reservations = reservations.filter(reservation => reservation.office.id === officeId);
+    reservations = reservations.filter(reservation => reservation.office.id == officeId);
     reservations.forEach(reservation => delete reservation.office);
 
     const res = {

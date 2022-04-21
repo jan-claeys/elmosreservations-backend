@@ -14,11 +14,11 @@ export class CreateReservationDto {
     @Type(() => Date)
     @IsDate()
     @MinDate(new Date())
-    start_time: Date;
+    startTime: Date;
 
     @IsNotEmpty()
     @Type(() => Date)
     @IsDate()
     @MinDate(new Date())
-    end_time: Date;
+    endTime: Date;
 }

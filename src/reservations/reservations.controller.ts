@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, BadRequestException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, BadRequestException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('reservations')
+@UseGuards(JwtAuthGuard)
 @ApiTags('reservation')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
   @Get()
-  findAll(@Query('officeId', ParseIntPipe) officeId: number, @Query('startTime') startTime: Date, @Query('endTime') endTime: Date): Promise<any> {
+  findAll(@Query('startTime') startTime: Date, @Query('endTime') endTime: Date, @Query('officeId') officeId: number): Promise<any> {
     if(new Date(startTime) > new Date(endTime)) {
       throw new BadRequestException('Start time must be before end time');
     }
@@ -20,10 +22,9 @@ export class ReservationsController {
     return this.reservationsService.findAll(startTime, endTime);
   }
 
-  
   @Post()
   create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+    this.reservationsService.create(createReservationDto);
   }
 
   @Delete("/:id")
