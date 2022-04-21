@@ -3,32 +3,46 @@ import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { OfficesService } from 'src/offices/offices.service';
 
 @Controller('reservations')
 @UseGuards(JwtAuthGuard)
 @ApiTags('reservation')
 export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) {}
+  constructor(
+    private readonly reservationsService: ReservationsService,
+    private readonly officeService: OfficesService,
+  ) { }
 
   @Get()
   findAll(@Query('startTime') startTime: Date, @Query('endTime') endTime: Date, @Query('officeId') officeId: number): Promise<any> {
-    if(new Date(startTime) > new Date(endTime)) {
+    if (new Date(startTime) > new Date(endTime)) {
       throw new BadRequestException('Start time must be before end time');
     }
 
-    if(officeId) {
+    if (officeId) {
       return this.reservationsService.find(officeId, startTime, endTime);
     }
     return this.reservationsService.findAll(startTime, endTime);
   }
 
   @Post()
-  create(@Request() req, @Body() createReservationDto: CreateReservationDto) {
+  async create(@Request() req, @Body() createReservationDto: CreateReservationDto) {
+    if (new Date(createReservationDto.startTime) > new Date(createReservationDto.endTime)) {
+      throw new BadRequestException('Start time must be before end time');
+    }
+
+    const office = await this.officeService.findOne(createReservationDto.officeId, createReservationDto.startTime, createReservationDto.endTime);
+    const officeEmptyPlaces = office.empty_places;
+    
+    if (officeEmptyPlaces <= 0) {
+      throw new BadRequestException('office is full');
+    }
     this.reservationsService.create(createReservationDto, req.user.id);
   }
 
   @Delete("/:id")
-    delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id', ParseIntPipe) id: number) {
     return this.reservationsService.delete(id);
   }
 }
