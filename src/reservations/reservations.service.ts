@@ -22,8 +22,6 @@ export class ReservationsService {
 
     reservation.office = await this.officeService.findOne(createReservationDto.officeId);
     reservation.user = await this.userService.findOne(createReservationDto.userId);
-
-    console.log(reservation);
     
     this.reservationRepository.save(reservation); */
   }
