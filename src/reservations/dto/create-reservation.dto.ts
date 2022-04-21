@@ -7,10 +7,6 @@ export class CreateReservationDto {
     officeId: number;
 
     @IsNotEmpty()
-    @IsNumber()
-    userId: number;
-
-    @IsNotEmpty()
     @Type(() => Date)
     @IsDate()
     @MinDate(new Date())

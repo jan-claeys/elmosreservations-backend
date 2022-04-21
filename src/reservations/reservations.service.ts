@@ -14,8 +14,8 @@ export class ReservationsService {
     private readonly officeService: OfficesService,
   ) { }
 
-  create(createReservationDto: CreateReservationDto): Promise<Reservation> {
-    return this.reservationRepository.query('insert into reservation (start_time, end_time, "officeId", "userId") values ($1, $2, $3, $4)', [createReservationDto.startTime, createReservationDto.endTime, createReservationDto.officeId, createReservationDto.userId]);
+  create(createReservationDto: CreateReservationDto, userId: number): Promise<Reservation> {
+    return this.reservationRepository.query('insert into reservation (start_time, end_time, "officeId", "userId") values ($1, $2, $3, $4)', [createReservationDto.startTime, createReservationDto.endTime, createReservationDto.officeId, userId]);
   }
 
   async find(officeId: number, startTime: Date, endTime: Date) {

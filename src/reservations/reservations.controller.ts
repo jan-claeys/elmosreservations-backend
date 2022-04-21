@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, BadRequestException, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, BadRequestException, ParseIntPipe, UseGuards, Request } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -23,8 +23,8 @@ export class ReservationsController {
   }
 
   @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    this.reservationsService.create(createReservationDto);
+  create(@Request() req, @Body() createReservationDto: CreateReservationDto) {
+    this.reservationsService.create(createReservationDto, req.user.id);
   }
 
   @Delete("/:id")
