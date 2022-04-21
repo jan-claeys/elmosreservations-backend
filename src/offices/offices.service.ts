@@ -10,8 +10,8 @@ export class OfficesService {
     private officeRepository: Repository<Office>,
   ) {}
 
-  findAll(): Promise<Office[]> {
-    return this.officeRepository.query("select * from getoffices($1, $2)", [new Date(), new Date()]);
+  findAll(startTime, endTime): Promise<Office[]> {
+    return this.officeRepository.query("select * from getoffices($1, $2)", [startTime, endTime]);
   }
 
   findOne(id: number, startTime: Date, endTime: Date): Promise<Office> {

@@ -6,7 +6,6 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Reservation } from './reservation.entity';
 import { OfficesService } from 'src/offices/offices.service';
 import { UsersService } from 'src/users/users.service';
-import { start } from 'repl';
 
 @Injectable()
 export class ReservationsService {
@@ -31,8 +30,10 @@ export class ReservationsService {
 
   async find(officeId: number, startTime: Date, endTime: Date) {
     let reservations: Reservation[] = await this.findAll(startTime, endTime);
+
     let office: Office = await this.officeService.findOne(officeId, startTime, endTime);
 
+    reservations = reservations.filter(reservation => reservation.office.id === officeId);
     reservations.forEach(reservation => delete reservation.office);
 
     const res = {
@@ -46,8 +47,7 @@ export class ReservationsService {
   async findAll(startTime: Date, endTime: Date): Promise<Reservation[]> {
     let res: Reservation[] = await this.reservationRepository.find();
     return res.filter(reservation => {
-        return !(reservation.start_time > startTime && reservation.end_time > endTime
-          || reservation.end_time < startTime && reservation.end_time < endTime)
+          return (new Date(startTime) <= new Date(reservation.end_time)) && (new Date(reservation.start_time) <= new Date(endTime));
       });
   }
 
