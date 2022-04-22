@@ -5,14 +5,15 @@ import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { Reservation } from './reservation.entity';
 import { OfficesService } from 'src/offices/offices.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ReservationsService {
   constructor(
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
-    private readonly officeService: OfficesService,
-  ) { }
+    private readonly officeService: OfficesService
+  ) {}
 
   create(createReservationDto: CreateReservationDto, userId: number): Promise<Reservation> {
     return this.reservationRepository.query('insert into reservation (start_time, end_time, "officeId", "userId") values ($1, $2, $3, $4)', [createReservationDto.startTime, createReservationDto.endTime, createReservationDto.officeId, userId]);
@@ -39,6 +40,10 @@ export class ReservationsService {
     return res.filter(reservation => {
           return (new Date(startTime) <= new Date(reservation.end_time)) && (new Date(reservation.start_time) <= new Date(endTime));
       });
+  }
+
+  findAllUser(userId: number): Promise<Reservation[]> {
+    return this.reservationRepository.find({ where: { user: userId } });
   }
 
   delete(id: number) {

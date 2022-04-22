@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, BadRequestException, ParseIntPipe, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, HttpCode, BadRequestException, ParseIntPipe, UseGuards, Request } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { OfficesService } from 'src/offices/offices.service';
+import { Reservation } from './reservation.entity';
 
 @Controller('reservations')
 @UseGuards(JwtAuthGuard)
@@ -42,7 +43,13 @@ export class ReservationsController {
   }
 
   @Delete("/:id")
-  delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Request() req, @Param('id', ParseIntPipe) id: number) {
+    const reservations: Reservation[] = await this.reservationsService.findAllUser(req.user.id);
+    
+    if(!reservations.find(reservation => reservation.id == id)) {
+      throw new BadRequestException('You can not delete this reservation');
+    }
+    
     return this.reservationsService.delete(id);
   }
 }
