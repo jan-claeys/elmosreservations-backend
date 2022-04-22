@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateReservationDto } from 'src/reservations/dto/create-reservation.dto';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user-dto';
 import { User } from './user.entity';
@@ -20,12 +19,12 @@ export class UsersService {
     return this.usersRepository.findOne(id);
   }
 
-  async findOneEmail(email: string): Promise<User | undefined> {
-    let users = await this.findAll();
+  async findOneEmailWithPassword(email: string): Promise<User | undefined> {
+    let users = await this.usersRepository.query('SELECT * FROM "user" WHERE email = $1',[email]);
     return users.filter(user => user.email === email)[0];
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  create(createUserDto: CreateUserDto): Promise<User> {
     return this.usersRepository.save(createUserDto);
   }
 }
