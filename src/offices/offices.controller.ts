@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Office } from './Office.entity';
 import { OfficesService } from './offices.service';
 
@@ -7,6 +7,18 @@ import { OfficesService } from './offices.service';
 @ApiTags('office')
 export class OfficesController {
   constructor(private readonly officService: OfficesService) {}
+
+  @ApiQuery({
+    name: "startTime",
+    type: Date,
+    required: false
+  })
+
+  @ApiQuery({
+    name: "endTime",
+    type: Date,
+    required: false
+  })
 
    @Get()
     getAll(@Query("startTime")startTime: Date, @Query("endTime")endTime: Date): Promise<Office[]> { 

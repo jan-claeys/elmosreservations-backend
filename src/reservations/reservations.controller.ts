@@ -1,13 +1,14 @@
 import { Controller, Get, Post, Body, Param, Delete, Query, HttpCode, BadRequestException, ParseIntPipe, UseGuards, Request } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { OfficesService } from 'src/offices/offices.service';
 import { Reservation } from './reservation.entity';
 
 @Controller('reservations')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @ApiTags('reservation')
 export class ReservationsController {
   constructor(
@@ -15,6 +16,24 @@ export class ReservationsController {
     private readonly officeService: OfficesService,
   ) { }
 
+  @ApiQuery({
+    name: "startTime",
+    type: Date,
+    required: true
+  })
+
+  @ApiQuery({
+    name: "endTime",
+    type: Date,
+    required: true
+  })
+
+  @ApiQuery({
+    name: "officeId",
+    type: Number,
+    required: false
+  })
+  
   @Get()
   findAll(@Query('startTime') startTime: Date, @Query('endTime') endTime: Date, @Query('officeId') officeId: number): Promise<any> {
     if (new Date(startTime) > new Date(endTime)) {

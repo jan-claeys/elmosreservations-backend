@@ -3,7 +3,9 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UsersService } from './users.service';
 import * as bcrypt from 'bcrypt';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) { }
@@ -24,6 +26,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   getUser(@Request() req) {
     return this.userService.findOne(req.user.id);
   }
